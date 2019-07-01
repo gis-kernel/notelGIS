@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+{%extends "nongis/index.html"%}
+{% load static %}
+{% block head_block %}
+<link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css"
+    type="text/css">
+<link href="{% static 'custom/map.css' %}" rel="stylesheet" type="text/css" />
+<script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+<!-- <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script> -->
+{% endblock %}
+{% block body_block %}
+<div class="wrapper">
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+            <img src="{% static 'assets/media/logos/logo.svg' %}" height="30" alt=""> N-Hub Optimizer
+        </a>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">Select</button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Area</a>
+                    <a class="dropdown-item" href="#">Findings</a>
+                    <a class="dropdown-item" href="#">Sites</a>
+                </div>
+            </div>
+            <input type="text" class="form-control" aria-label="Text input with dropdown button">
+            <button class="btn search-btn"><i class="flaticon-search"></i></button>
+        </div>
+
+
+        <div class="kt-header__topbar">
+
+            <!--begin: Search -->
+            <div class="kt-header__topbar-item">
+                <div class="kt-header__topbar-wrapper">
+                    <span class="kt-header__topbar-icon"><i class="flaticon-home-2"></i></span>
+                </div>
+            </div>
+
+            <!--end: Search -->
+
+            <!--begin: Base Map -->
+            <div class="kt-header__topbar-item dropdown">
+                <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="10px,0px"
+                    aria-expanded="false">
+                    <span class="kt-header__topbar-icon kt-header__topbar-icon--success"><i
+                            class="flaticon-grid-menu-v2"></i></span>
+                    <span class="kt-hidden kt-badge kt-badge--danger"></span>
+                </div>
+                <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl"
+                    x-placement="top-end">
+                    <form>
+                        <!--begin: Head -->
+                        <!-- <div class="kt-head kt-head--skin-dark" style="background-image: url(./assets/media/misc/bg-1.jpg)">
+                            <h3 class="kt-head__title">
+                                User Quick Actions
+                                <span class="kt-space-15"></span>
+                                <span class="btn btn-success btn-sm btn-bold btn-font-md">23 tasks pending</span>
+                            </h3>
+                        </div> -->
+
+                        <!--end: Head -->
+
+                        <!--begin: Grid Nav -->
+                        <div class="kt-grid-nav kt-grid-nav--skin-light">
+                            <div class="kt-grid-nav__row">
+                                <a href="#" class="kt-grid-nav__item">
+                                    <span class="mapThumb"
+                                        style="background-image: url({% static 'assets/media/maps/satellite.JPG' %})"></span>
+                                    <span class="kt-grid-nav__title">Satellite</span>
+                                    <!-- <span class="kt-grid-nav__desc">Sub Text Area</span> -->
+                                </a>
+                                <a href="#" class="kt-grid-nav__item">
+                                    <span class="mapThumb"
+                                        style="background-image: url({% static 'assets/media/maps/street.JPG' %})"></span>
+                                    <span class="kt-grid-nav__title">Street</span>
+                                    <!-- <span class="kt-grid-nav__desc">Sub Text Area</span> -->
+                                </a>
+                            </div>
+                            <div class="kt-grid-nav__row">
+                                <a href="#" class="kt-grid-nav__item">
+                                    <span class="mapThumb"
+                                        style="background-image: url({% static 'assets/media/maps/terrain.jpeg' %})"></span>
+                                    <span class="kt-grid-nav__title">Terrain</span>
+                                    <!-- <span class="kt-grid-nav__desc">Sub Text Area</span> -->
+                                </a>
+                                <a href="#" class="kt-grid-nav__item">
+                                    <span class="mapThumb"
+                                        style="background-image: url({% static 'assets/media/maps/water.png' %})"></span>
+                                    <span class="kt-grid-nav__title">Water Color</span>
+                                    <!-- <span class="kt-grid-nav__desc">Sub Text Area</span> -->
+                                </a>
+                                <!-- <a href="#" class="kt-grid-nav__item">
+                                    <span class="mapThumb"
+                                        style="background-image: url({% static 'assets/media/maps/4.jpg' %})"></span>
+                                    <span class="kt-grid-nav__title">Base Map 4</span>
+                                    <span class="kt-grid-nav__desc">Sub Text Area</span>
+                                </a> -->
+                            </div>
+                        </div>
+
+                        <!--end: Grid Nav -->
+                    </form>
+                </div>
+            </div>
+
+            <!--end: Base Map -->
+
+            <!--begin: HELP -->
+            <div class="kt-header__topbar-item">
+                <div class="kt-header__topbar-wrapper">
+                    <span class="kt-header__topbar-icon"><i class="flaticon-questions-circular-button"></i></span>
+                </div>
+            </div>
+            <!--end: HELP -->
+
+            <!--begin: User bar -->
+            <div class="kt-header__topbar-item kt-header__topbar-item--user">
+                <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="10px,0px">
+                    <span class="kt-hidden0 kt-header__topbar-icon kt-hidden-"><i class="la la-user"></i></span>
+                    <span class="kt-hidden0 kt-header__topbar-welcome">Hi,</span>
+                    <span class="kt-hidden0 kt-header__topbar-username">Nick </span>
+                    <img class="kt-hidden" alt="Pic" src="{% static 'assets/media/users/100_3.jpg' %}">
+
+                </div>
+                <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
+
+                    <!--begin: Head -->
+                    <div class="kt-user-card kt-user-card--skin-dark kt-notification-item-padding-x"
+                        style="background-image: url({% static 'assets/media/bg/450.jpg' %})">
+                        <div class="kt-user-card__avatar">
+                            <img class="kt-hidden" alt="Pic" src="{% static 'assets/media/users/100_3.jpg' %}">
+
+                            <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
+                            <span
+                                class="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success">S</span>
+                        </div>
+                        <div class="kt-user-card__name">
+                            Sean Stone
+                        </div>
+                        <div class="kt-user-card__badge">
+                            <span class="btn btn-success btn-sm btn-bold btn-font-md">Sign Out</span>
+                        </div>
+                    </div>
+
+                    <!--end: Head -->
+
+                    <!--begin: Navigation -->
+                    <div class="kt-notification">
+                        <a href="#" class="kt-notification__item" data-toggle="modal" data-target="#manageUserModal">
+                            <div class="kt-notification__item-icon">
+                                <i class="flaticon2-calendar-3 kt-font-success"></i>
+                            </div>
+                            <div class="kt-notification__item-details">
+                                <div class="kt-notification__item-title kt-font-bold">
+                                    Manage Users
+                                </div>
+                                <div class="kt-notification__item-time">
+                                    Users settings and more
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- <a href="#" class="kt-notification__item">
+                            <div class="kt-notification__item-icon">
+                                <i class="flaticon2-rocket-1 kt-font-danger"></i>
+                            </div>
+                            <div class="kt-notification__item-details">
+                                <div class="kt-notification__item-title kt-font-bold">
+                                    My Activities
+                                </div>
+                                <div class="kt-notification__item-time">
+                                    Logs and notifications
+                                </div>
+                            </div>
+                        </a> -->
+
+                    </div>
+
+                    <!--end: Navigation -->
+                </div>
+            </div>
+
+            <!--end: User bar -->
+
+        </div>
+    </nav>
+</div>
+<ul class="right-tools">
+     <li data-toggle="modal" data-target="#LLModal"><i class="flaticon-layers" data-container="body"
+            data-toggle="kt-tooltip" data-placement="right" title="" data-original-title="Layer List"></i></li>
+    <li data-toggle="modal" data-target="#LegendModal"><i class="la la-list" data-container="body"
+            data-toggle="kt-tooltip" data-placement="right" title="" data-original-title="Legend"></i></li>
+    <li data-toggle="modal" data-target="#ScaleModal"><i class="fa fa-ruler" data-container="body"
+            data-toggle="kt-tooltip" data-placement="right" title="" data-original-title="Scale"></i></li>
+    <li data-toggle="modal" data-target="#QueryModal"><i class="la la-cogs" data-container="body"
+            data-toggle="kt-tooltip" data-placement="right" title="" data-original-title="Query Builder"></i></li>
+    <li data-toggle="modal" data-target="#graphModal"><i class="la la-bar-chart" data-container="body"
+            data-toggle="kt-tooltip" data-placement="right" title="" data-original-title="Graphs and Statistics"></i>
+    </li>
+    <li data-toggle="modal" data-target="#uploadCSV"><i class="la la-cloud-upload" data-container="body"
+        data-toggle="kt-tooltip" data-placement="right" title="" data-original-title="Upload CSV File"></i>
+    </li>
+    <li data-toggle="modal" data-target="#Spider"><i class="la la-hand-o-up" data-container="body"
+        data-toggle="kt-tooltip" data-placement="right" title="" data-original-title="Spider movement tool"></i>
+    </li>
+</ul>
+<ul class="left-tools">
+    <li onclick='zoomin()' data-container="body" data-toggle="kt-tooltip" data-placement="left" title=""
+        data-original-title="Zoom In"><i class="la la-plus"></i></li>
+    <li onclick='zoomout()' data-container="body" data-toggle="kt-tooltip" data-placement="left" title=""
+        data-original-title="Zoom Out"><i class="la la-minus"></i></li>
+    <li data-container="body" data-toggle="kt-tooltip" data-placement="left" title="" data-original-title="Locate"><i
+            class="la la-crosshairs"></i></li>
+    <li data-container="body" data-toggle="kt-tooltip" data-placement="left" title="" data-original-title="Identify "><i
+            class="la la-info"></i></li>
+    <li data-container="body" data-toggle="kt-tooltip" data-placement="left" title=""
+        data-original-title="Rectangle Zoom"><i class="la la-external-link-square"></i></li>
+    <li data-container="body" data-toggle="kt-tooltip" data-placement="left" title="" data-original-title="Full Window">
+        <i class="la la-arrows"></i></li>
+</ul>
+<div id="map" class="map"></div>
+
+
+
+
+
+<!-- Upload SCV Start -->
+<div class="modal fade" data-backdrop="false" id="uploadCSV" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload CSV</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Upload</span>
+                    </div>
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="inputGroupFile01">
+                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Choose Latitude</label>
+                            <select name="" id="" class="form-control">
+                                <option value="">Latitude</option>
+                                <option value="">Latitude</option>
+                                <option value="">Latitude</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label>Choose Longitude</label>
+                            <select name="" id="" class="form-control">
+                                <option value="">Longitude</option>
+                                <option value="">Longitude</option>
+                                <option value="">Longitude</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <p>
+                    Choose Symbology: <input type="color" name="favcolor" value="#ff0000">
+                </p>
+                <p class="text-center">
+                    <button class="mt-2 btn btn-success btn-elevate btn-pill btn-elevate-air" data-toggle="modal" data-target="#SaveModal">Save</button>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Upload SCV End -->
+
+<!-- Spider Start -->
+<div class="modal fade" data-backdrop="false" id="Spider" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Spider movement tool</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <button type="button" class="btn btn-brand btn-elevate btn-pill btn-block">
+                        <i class="la la-hand-o-up"></i> Select sites from map
+                    </button>
+                </p>
+                <div class="kt-radio-list">
+                    <label class="kt-radio"> 
+                        <input name="radio3" type="radio" checked> Serving Line Carrier
+                        <span></span>
+                        <i class="la la-refresh"></i>
+                    </label>
+                    <label class="kt-radio">
+                        <input name="radio3" type="radio"> Serving Line Cell
+                        <span></span>
+                    </label>
+                    <label class="kt-radio">
+                        <input name="radio3" type="radio"> Serving Line Findings
+                        <span></span>
+                    </label>
+                    <p class="text-center">
+                        <button class="mt-2 btn btn-success btn-elevate btn-pill btn-elevate-air" >Apply</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Spider End -->
+
+<!-- Manage Users Start -->
+<div class="modal hide fade" data-keyboard="false" data-backdrop="static" id="manageUserModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">User Management</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
+                    <!-- <div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title">
+                                    Exclusive Datatable Plugin
+                                </h3>
+                            </div>
+                        </div> -->
+                    <div class="kt-portlet__body kt-portlet__body--fit">
+
+                        <!--begin: Datatable -->
+                        <div class="kt-datatable kt-datatable--default kt-datatable--scroll kt-datatable--loaded"
+                            id="kt_datatable_latest_orders" style="">
+                            <table class="kt-datatable__table"
+                                style="display: block; min-height: 500px; max-height: 500px;">
+                                <thead class="kt-datatable__head">
+                                    <tr class="kt-datatable__row" style="left: 0px;">
+                                        <th data-field="RecordID"
+                                            class="kt-datatable__cell--center kt-datatable__cell kt-datatable__cell--check">
+                                            <span style="width: 110px;"><label
+                                                    class="kt-checkbox kt-checkbox--single kt-checkbox--all kt-checkbox--solid"><input
+                                                        type="checkbox">&nbsp;<span></span></label></span></th>
+                                        <th data-field="User" data-autohide-disabled="false"
+                                            class="kt-datatable__cell kt-datatable__cell--sort"><span
+                                                style="width: 110px;">User Name</span></th>
+                                        <th data-field="Country" data-autohide-disabled="false"
+                                            class="kt-datatable__cell kt-datatable__cell--sort"><span
+                                                style="width: 110px;">County</span></th>
+                                        <th data-field="Status" class="kt-datatable__cell kt-datatable__cell--sort">
+                                            <span style="width: 110px;">Approval Status</span></th>
+                                        <th data-field="Actions" data-autohide-disabled="false"
+                                            class="kt-datatable__cell kt-datatable__cell--sort"><span
+                                                style="width: 110px;">Actions</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="kt-datatable__body ps ps--active-y" style="max-height: 498px;">
+                                    <tr data-row="0" class="kt-datatable__row" style="left: 0px;">
+                                        <td class="kt-datatable__cell--center kt-datatable__cell kt-datatable__cell--check"
+                                            data-field="RecordID"><span style="width: 110px;"><label
+                                                    class="kt-checkbox kt-checkbox--single kt-checkbox--solid"><input
+                                                        type="checkbox" value="1">&nbsp;<span></span></label></span>
+                                        </td>
+                                        <td data-field="User" class="kt-datatable__cell"><span><span
+                                                    class="kt-font-bold">Smith Jacob</span></span></td>
+                                        <td data-field="Country" class="kt-datatable__cell"><span><span
+                                                    class="kt-font-bold">France</span></span></td>
+
+                                        <td data-field="Status" class="kt-datatable__cell"><span><span
+                                                    class="btn btn-bold btn-sm btn-font-sm  btn-label-danger">Approved</span></span>
+                                        </td>
+                                        <td data-field="Actions" data-autohide-disabled="false"
+                                            class="kt-datatable__cell"><span
+                                                style="overflow: visible; position: relative;">
+                                                <div class="dropdown"> <a data-toggle="dropdown"
+                                                        class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i
+                                                            class="flaticon-more-1"></i> </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <ul class="kt-nav">
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-expand"></i>
+                                                                    <span class="kt-nav__link-text">View</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-contract"></i>
+                                                                    <span class="kt-nav__link-text">Edit</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-trash"></i>
+                                                                    <span class="kt-nav__link-text">Delete</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-mail-1"></i>
+                                                                    <span class="kt-nav__link-text">Export</span> </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </span></td>
+                                    </tr>
+                                    <tr data-row="0" class="kt-datatable__row" style="left: 0px;">
+                                        <td class="kt-datatable__cell--center kt-datatable__cell kt-datatable__cell--check"
+                                            data-field="RecordID"><span style="width: 110px;"><label
+                                                    class="kt-checkbox kt-checkbox--single kt-checkbox--solid"><input
+                                                        type="checkbox" value="1">&nbsp;<span></span></label></span>
+                                        </td>
+                                        <td data-field="User" class="kt-datatable__cell"><span><span
+                                                    class="kt-font-bold">Andrew Ponting</span></span></td>
+                                        <td data-field="Country" class="kt-datatable__cell"><span><span
+                                                    class="kt-font-bold">Australia</span></span></td>
+
+                                        <td data-field="Status" class="kt-datatable__cell"><span><span
+                                                    class="btn btn-bold btn-sm btn-font-sm  btn-label-brand">Pending</span></span>
+                                        </td>
+                                        <td data-field="Actions" data-autohide-disabled="false"
+                                            class="kt-datatable__cell"><span
+                                                style="overflow: visible; position: relative;">
+                                                <div class="dropdown"> <a data-toggle="dropdown"
+                                                        class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i
+                                                            class="flaticon-more-1"></i> </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <ul class="kt-nav">
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-expand"></i>
+                                                                    <span class="kt-nav__link-text">View</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-contract"></i>
+                                                                    <span class="kt-nav__link-text">Edit</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-trash"></i>
+                                                                    <span class="kt-nav__link-text">Delete</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-mail-1"></i>
+                                                                    <span class="kt-nav__link-text">Export</span> </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </span></td>
+                                    </tr>
+                                    <tr data-row="0" class="kt-datatable__row" style="left: 0px;">
+                                        <td class="kt-datatable__cell--center kt-datatable__cell kt-datatable__cell--check"
+                                            data-field="RecordID"><span style="width: 110px;"><label
+                                                    class="kt-checkbox kt-checkbox--single kt-checkbox--solid"><input
+                                                        type="checkbox" value="1">&nbsp;<span></span></label></span>
+                                        </td>
+                                        <td data-field="User" class="kt-datatable__cell"><span><span
+                                                    class="kt-font-bold">George Phillips</span></span></td>
+                                        <td data-field="Country" class="kt-datatable__cell"><span><span
+                                                    class="kt-font-bold">Poland</span></span></td>
+
+                                        <td data-field="Status" class="kt-datatable__cell"><span><span
+                                                    class="btn btn-bold btn-sm btn-font-sm  btn-label-warning">Rejected</span></span>
+                                        </td>
+                                        <td data-field="Actions" data-autohide-disabled="false"
+                                            class="kt-datatable__cell"><span
+                                                style="overflow: visible; position: relative;">
+                                                <div class="dropdown"> <a data-toggle="dropdown"
+                                                        class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i
+                                                            class="flaticon-more-1"></i> </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <ul class="kt-nav">
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-expand"></i>
+                                                                    <span class="kt-nav__link-text">View</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-contract"></i>
+                                                                    <span class="kt-nav__link-text">Edit</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-trash"></i>
+                                                                    <span class="kt-nav__link-text">Delete</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-mail-1"></i>
+                                                                    <span class="kt-nav__link-text">Export</span> </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </span></td>
+                                    </tr>
+                                    <tr data-row="0" class="kt-datatable__row" style="left: 0px;">
+                                        <td class="kt-datatable__cell--center kt-datatable__cell kt-datatable__cell--check"
+                                            data-field="RecordID"><span style="width: 110px;"><label
+                                                    class="kt-checkbox kt-checkbox--single kt-checkbox--solid"><input
+                                                        type="checkbox" value="1">&nbsp;<span></span></label></span>
+                                        </td>
+                                        <td data-field="User" class="kt-datatable__cell"><span><span
+                                                    class="kt-font-bold">Carol Geller</span></span></td>
+                                        <td data-field="Country" class="kt-datatable__cell"><span><span
+                                                    class="kt-font-bold">USA</span></span></td>
+
+                                        <td data-field="Status" class="kt-datatable__cell"><span><span
+                                                    class="btn btn-bold btn-sm btn-font-sm  btn-label-warning">Rejected</span></span>
+                                        </td>
+                                        <td data-field="Actions" data-autohide-disabled="false"
+                                            class="kt-datatable__cell"><span
+                                                style="overflow: visible; position: relative;">
+                                                <div class="dropdown"> <a data-toggle="dropdown"
+                                                        class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i
+                                                            class="flaticon-more-1"></i> </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <ul class="kt-nav">
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-expand"></i>
+                                                                    <span class="kt-nav__link-text">View</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-contract"></i>
+                                                                    <span class="kt-nav__link-text">Edit</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-trash"></i>
+                                                                    <span class="kt-nav__link-text">Delete</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-mail-1"></i>
+                                                                    <span class="kt-nav__link-text">Export</span> </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </span></td>
+                                    </tr>
+                                    <tr data-row="0" class="kt-datatable__row" style="left: 0px;">
+                                        <td class="kt-datatable__cell--center kt-datatable__cell kt-datatable__cell--check"
+                                            data-field="RecordID"><span style="width: 110px;"><label
+                                                    class="kt-checkbox kt-checkbox--single kt-checkbox--solid"><input
+                                                        type="checkbox" value="1">&nbsp;<span></span></label></span>
+                                        </td>
+                                        <td data-field="User" class="kt-datatable__cell"><span><span
+                                                    class="kt-font-bold">Lynda Cooper</span></span></td>
+                                        <td data-field="Country" class="kt-datatable__cell"><span><span
+                                                    class="kt-font-bold">Poland</span></span></td>
+
+                                        <td data-field="Status" class="kt-datatable__cell"><span><span
+                                                    class="btn btn-bold btn-sm btn-font-sm  btn-label-danger">Approved</span></span>
+                                        </td>
+                                        <td data-field="Actions" data-autohide-disabled="false"
+                                            class="kt-datatable__cell"><span
+                                                style="overflow: visible; position: relative;">
+                                                <div class="dropdown"> <a data-toggle="dropdown"
+                                                        class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i
+                                                            class="flaticon-more-1"></i> </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <ul class="kt-nav">
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-expand"></i>
+                                                                    <span class="kt-nav__link-text">View</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-contract"></i>
+                                                                    <span class="kt-nav__link-text">Edit</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-trash"></i>
+                                                                    <span class="kt-nav__link-text">Delete</span> </a>
+                                                            </li>
+                                                            <li class="kt-nav__item"> <a class="kt-nav__link" href="#">
+                                                                    <i class="kt-nav__link-icon flaticon2-mail-1"></i>
+                                                                    <span class="kt-nav__link-text">Export</span> </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </span></td>
+                                    </tr>
+                            </table>
+                        </div>
+
+                        <!--end: Datatable -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Manage Users End -->
+
+<!-- Layer List Start -->
+<div class="modal hide fade" data-keyboard="false" data-backdrop="static" id="LLModal" tabindex="-1" role="dialog" >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Layer List</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row expand">
+                    
+                    <div class="col text-right">
+                        <span>
+                            Expand All
+                            <span class="kt-switch kt-switch--dark kt-switch--sm">
+                                <label>
+                                    <input type="checkbox" checked="checked" name="">
+                                    <span></span>
+                                </label>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="selectFilter">
+                    <select name="" id="" class="form-control">
+                        <option value="">RFBenchMark</option>
+                        <option value="">TEMS</option>
+                    </select>
+                </div>
+                <div class="mainList">
+                    <div class="listItem">
+                        <span class="control">+</span>
+                        <label class="kt-checkbox">
+                            <input type="checkbox"> Group A
+                            <span></span>
+                        </label>
+                        <a href="#" class="goTo"><i class="la la-arrow-right"></i></a>
+                    </div>
+                    <div class="subList">
+                        <div class="subListItem">
+                            <span class="control">+</span>
+                            <label class="kt-checkbox">
+                                <input type="checkbox"> Area
+                                <span></span>
+                            </label>
+                            <!-- <a href="#" class="goTo"><i class="la la-arrow-right"></i></a> -->
+                        </div>
+                        <div class="subListItem">
+                            <span class="control">+</span>
+                            <label class="kt-checkbox">
+                                <input type="checkbox"> Serving Line (Carrier)
+                                <span></span>
+                            </label>
+                            <div class="w-100"></div>
+                            <div class="opsions">
+                                <!-- <span class="kt-switch kt-switch--dark kt-switch--sm">
+                                    <label>
+                                        <input type="checkbox" checked="checked" name="">
+                                        <span></span>
+                                    </label>
+                                </span>
+                                <span> Legend</span> -->
+
+                                <div id="kt_nouislider_2"
+                                    class="kt-nouislider kt-nouislider--handle-danger noUi-target noUi-ltr noUi-horizontal">
+                                    <div class="noUi-base">
+                                        <div class="noUi-connects">
+                                            <div class="noUi-connect"
+                                                style="transform: translate(0%, 0px) scale(0, 1);"></div>
+                                        </div>
+                                        <div class="noUi-origin" style="transform: translate(-100%, 0px); z-index: 4;">
+                                            <div class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="0"
+                                                role="slider" aria-orientation="horizontal" aria-valuemin="20000.0"
+                                                aria-valuemax="80000.0" aria-valuenow="20000.0"
+                                                aria-valuetext="20.000 (US $)">
+                                                <div class="noUi-touch-area"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <a href="#" class="goTo"><i class="la la-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Layer List End -->
+
+<!-- Legend Modal Start -->
+<div class="modal fade" data-backdrop="false" id="LegendModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Legend</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="Legend">
+                    <div class="checkbox">
+                        <label><img
+                                src="http://1.23.144.187:8080/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=20&amp;HEIGHT=20&amp;LAYER=cite:aoi_boundary_v6">
+                            Town Boundary</label>
+                        <span><i class="la la-arrow-up"></i> <i class="la la-arrow-down"></i> <i
+                                class="la la-arrow-right"></i></span>
+                    </div>
+                    <div class="checkbox">
+                        <label><img
+                                src="http://1.23.144.187:8080/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=20&amp;HEIGHT=20&amp;LAYER=cite:bridges_v6">
+                            Bridges</label>
+                        <span><i class="la la-arrow-up"></i> <i class="la la-arrow-down"></i> <i
+                                class="la la-arrow-right"></i></span>
+                    </div>
+                    <div class="checkbox">
+                        <label><img
+                                src="http://1.23.144.187:8080/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=20&amp;HEIGHT=20&amp;LAYER=cite:buildings_v6">
+                            Buildings</label>
+                        <span><i class="la la-arrow-up"></i> <i class="la la-arrow-down"></i> <i
+                                class="la la-arrow-right"></i></span>
+                    </div>
+                    <div class="checkbox">
+                        <label><img
+                                src="http://1.23.144.187:8080/geoserver/wms?REQUEST=GetLegendGraphic&amp;VERSION=1.0.0&amp;FORMAT=image/png&amp;WIDTH=20&amp;HEIGHT=20&amp;LAYER=cite:land_marks_v6">
+                            Landmarks</label>
+                        <span><i class="la la-arrow-up"></i> <i class="la la-arrow-down"></i> <i
+                                class="la la-arrow-right"></i></span>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Legend Modal End -->
+
+
+<!-- Query Start Start -->
+<div class="modal fade" data-backdrop="false" id="QueryModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Query Builder</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs nav-tabs-line nav-tabs-line-success nav-tabs-line-2x" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="Attribute-tab" data-toggle="tab" href="#Attribute" role="tab"
+                            aria-controls="home" aria-selected="true">Attribute</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="Spatial-tab" data-toggle="tab" href="#Spatial" role="tab"
+                            aria-controls="Spatial" aria-selected="false">Spatial</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="Attribute" role="tabpanel" aria-labelledby="Attribute-tab">
+                        <div class="kt-portlet__body">
+                            <ul class="nav nav-pills nav-fill" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#BuildQuery">Build Query</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#LoadQuery">Load Query</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="BuildQuery" role="tabpanel">
+                                    <div class="row">
+                                        <div class="col-auto">Select Layer: </div>
+                                        <div class="col">
+                                            <select class="form-control">
+                                                <option value="">rfsig_meas_bins_cir</option>
+                                                <option value="">rfsig_meas_raw</option>
+                                                <option value="">rfsig_tests_bins</option>
+                                                <option value="">rfsig_tests_raw</option>
+                                            </select>
+                                        </div>
+                                        <div class="w-100 p-2"></div>
+                                        <div class="col">
+                                            <div class="kt-radio-inline">
+                                                <label class="kt-radio">
+                                                    <input name="radio2" type="radio"> Map Extent
+                                                    <span></span>
+                                                </label>
+                                                <label class="kt-radio">
+                                                    <input name="radio2" type="radio"> Full Extent
+                                                    <span></span>
+                                                </label>
+                                                <label class="kt-radio">
+                                                    <input name="radio2" type="radio"> Draw
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="w-100 p-2"></div>
+                                        <div class="col">
+                                            <label for="Fields">Fields</label>
+                                            <select class="form-control" id="Fields" multiple="">
+                                                <option>Project Id</option>
+                                                <option>Bin No.</option>
+                                                <option>Technology</option>
+                                                <option>Signal</option>
+                                                <option>Operator</option>
+                                                <option>Range</option>
+                                            </select>
+                                        </div>
+            
+                                        <div class="w-100 p-2"></div>
+                                        <div class="col Operators">
+                                            <label>Operators</label>
+                                            <div class="text-center">
+                                                <button class="btn btn-secondary btn-elevate btn-circle btn-icon"
+                                                    value="=">=</button>
+                                                <button class="btn btn-secondary btn-elevate btn-circle btn-icon"
+                                                    value=">">&gt;</button>
+                                                <button class="btn btn-secondary btn-elevate btn-circle btn-icon"
+                                                    value="<">&lt;</button>
+                                                <button class="btn btn-secondary btn-elevate btn-circle btn-icon"
+                                                    value=">=">&gt;=</button>
+                                                <button class="btn btn-secondary btn-elevate btn-circle btn-icon"
+                                                    value="<=">&lt;=</button>
+                                                <button class="btn btn-secondary btn-elevate btn-circle btn-icon"
+                                                    value="<>">&lt;&gt;</button>
+                                                <button class="btn btn-secondary btn-elevate btn-circle btn-icon"
+                                                    value="AND">AND</button>
+                                                <button class="btn btn-secondary btn-elevate btn-circle btn-icon"
+                                                    value="OR">OR</button>
+                                                <button class="btn btn-secondary btn-elevate btn-circle btn-icon"
+                                                    value="NOT">NOT</button>
+                                                <button class="btn btn-secondary btn-elevate btn-circle btn-icon"
+                                                    value="LIKE">LIKE</button>
+                                                <button class="btn btn-secondary btn-elevate btn-circle btn-icon"
+                                                    value="IS">IS</button>
+                                                <button class="btn btn-secondary btn-elevate btn-circle btn-icon"
+                                                    value="IN">IN</button>
+                                            </div>
+                                        </div>
+            
+                                        <div class="w-100 p-2"></div>
+                                        <div class="col">
+                                            <label for="Fields">SQL Where Clause:</label>
+                                            <textarea name="" id="" cols="3" class="form-control"></textarea>
+                                            <button class="mt-2 btn btn-warning btn-elevate btn-pill btn-elevate-air btn-sm">Clear
+                                                Text</button>
+                                        </div>
+            
+                                        <div class="w-100 p-2"></div>
+                                        <div class="col-auto">Selection Option: </div>
+                                        <div class="col">
+                                            <select class="form-control">
+                                                <option value="">Select</option>
+                                                <option value="">Select</option>
+                                                <option value="">Select</option>
+                                                <option value="">Select</option>
+                                            </select>
+                                        </div>
+            
+                                        <div class="w-100 p-2"></div>
+                                        <div class="col text-center">
+                                            <button class="mt-2 btn btn-success btn-elevate btn-pill btn-elevate-air">Apply</button>
+                                            <button class="mt-2 btn btn-success btn-elevate btn-pill btn-elevate-air" data-toggle="modal" data-target="#SaveModal">Save</button>
+                                            <button
+                                                class="mt-2 btn btn-outline-light btn-elevate btn-pill btn-elevate-air">Clear</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="LoadQuery" role="tabpanel">
+                                    <div class="row pt-2">
+                                        <div class="col-auto">
+                                            <label for="">Load from saved: </label>
+                                        </div>
+                                        <div class="col">
+                                            <select name="" id="" class="form-control">
+                                                <option value="">Area Contain</option>
+                                                <option value="">Sites</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class=" pt-2 text-center">
+                                        <button class="mt-2 btn btn-success btn-elevate btn-pill btn-elevate-air" data-toggle="modal" data-target="#SaveModal">Load</button>
+                                        <button class="mt-2 btn btn-outline-light btn-elevate btn-pill btn-elevate-air">Clear</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
+                    <div class="tab-pane fade" id="Spatial" role="tabpanel" aria-labelledby="Spatial-tab">
+                        <div class="tab-pane fade show active" id="Attribute" role="tabpanel" aria-labelledby="Attribute-tab">
+                            <div class="kt-portlet__body">
+                                <ul class="nav nav-pills nav-fill" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#BuildQuerySp">Build Query</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#LoadQuerySp">Load Query</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="BuildQuerySp" role="tabpanel">
+                                        <label for="">I want to:</label>
+                                        <div class="kt-radio-inline">
+                                            <label class="kt-radio">
+                                                <input name="radio3" type="radio"> Map Extent
+                                                <span></span>
+                                            </label>
+                                            <label class="kt-radio">
+                                                <input name="radio3" type="radio"> Full Extent
+                                                <span></span>
+                                            </label>
+                                            <label class="kt-radio">
+                                                <input name="radio3" type="radio"> Draw
+                                                <span></span>
+                                            </label>
+                                            <button class="btn btn-secondary btn-elevate btn-circle btn-icon"><i
+                                                    class="la la-trash"></i></button>
+                                        </div>
+                                        <div class="row pt-2">
+                                            <div class="col-auto">
+                                                <label for="">Select features from: </label>
+                                            </div>
+                                            <div class="col">
+                                                <select name="" id="" class="form-control">
+                                                    <option value="">rfsig_meas_bins_cir</option>
+                                                    <option value="">rfsig_meas_raw</option>
+                                                    <option value="">rfsig_tests_bins</option>
+                                                    <option value="">rfsig_tests_raw</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                
+                                        <label for="" class="pt-2">Criteria:</label>
+                                        <select name="" id="" class="form-control">
+                                            <option value="">WITHIN</option>
+                                            <option value="">INTERSECT</option>
+                                        </select>
+                
+                                        <div class="row pt-2">
+                                            <div class="col-12">
+                                                <label for="">The Feature:</label>
+                                            </div>
+                                            <div class="col-auto">
+                                                <label for="">In Layer: </label>
+                                            </div>
+                                            <div class="col">
+                                                <select class="form-control" id="exampleSelect2" multiple="">
+                                                    <option>Project Id</option>
+                                                    <option>Bin No.</option>
+                                                    <option>Technology</option>
+                                                    <option>Signal</option>
+                                                    <option>Operator</option>
+                                                    <option>Range</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                
+                                        <div class="row pt-2">
+                                            <div class="col-12">
+                                                <label for="">Graphic selection type:</label>
+                                            </div>
+                                            <div class="col">
+                                                <select class="form-control">
+                                                    <option>Existing</option>
+                                                    <option>New</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                </select>
+                                            </div>
+                                            <div class="w-100 p-2"></div>
+                                            <div class="col text-center">
+                                                <button class="mt-2 btn btn-success btn-elevate btn-pill btn-elevate-air">Apply</button>
+                                                <button class="mt-2 btn btn-success btn-elevate btn-pill btn-elevate-air" data-toggle="modal" data-target="#SaveModal">Save</button>
+                                                <button
+                                                    class="mt-2 btn btn-outline-light btn-elevate btn-pill btn-elevate-air">Clear</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="LoadQuerySp" role="tabpanel">
+                                        <div class="row pt-2">
+                                            <div class="col-auto">
+                                                <label for="">Load from saved: </label>
+                                            </div>
+                                            <div class="col">
+                                                <select name="" id="" class="form-control">
+                                                    <option value="">Area Contain</option>
+                                                    <option value="">Sites</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class=" pt-2 text-center">
+                                            <button class="mt-2 btn btn-success btn-elevate btn-pill btn-elevate-air" data-toggle="modal" data-target="#SaveModal">Load</button>
+                                            <button class="mt-2 btn btn-outline-light btn-elevate btn-pill btn-elevate-air">Clear</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Query Start End -->
+
+<!-- Save Start End -->
+<div class="modal fade" data-backdrop="false" id="SaveModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Save Query</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Name">
+                </div>
+                <div class="kt-radio-inline form-group">
+                    <label class="kt-radio">
+                        <input name="radio2" type="radio"> Private
+                        <span></span>
+                    </label>
+                    <label class="kt-radio">
+                        <input name="radio2" type="radio"> Public
+                        <span></span>
+                    </label>
+                </div>
+                <div class="kt-form__actions">
+                    <button type="reset" class="btn btn-success btn-elevate btn-pill btn-elevate-air">Save</button>
+                    <button type="reset" class="btn btn-outline-light btn-elevate btn-pill btn-elevate-air">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+<!-- Save Modal End -->
+
+<!-- Graph Start -->
+<div class="modal fade" data-backdrop="false" id="graphModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content Statistics">
+            <div class="modal-header">
+                <h5 class="modal-title">Graphs and Statistics</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <!--begin:: Widgets/Revenue Change-->
+                        <div class="kt-portlet kt-portlet--height-fluid">
+                            <div class="kt-widget14">
+                                <div class="kt-widget14__header">
+                                    <h3 class="kt-widget14__title">
+                                        Distribution
+                                    </h3>
+                                    <span class="kt-widget14__desc">
+                                        Distribution (# of unique cell identities) of different network issues
+                                    </span>
+                                </div>
+                                <div class="kt-widget14__content">
+                                    <div class="kt-widget14__chart">
+                                        <div id="kt_chart_revenue_change" style="height: 150px; width: 150px;"></div>
+                                    </div>
+                                    <div class="kt-widget14__legends">
+                                        <div class="kt-widget14__legend">
+                                            <span class="kt-widget14__bullet kt-bg-success"></span>
+                                            <span class="kt-widget14__stats">+10% New York</span>
+                                        </div>
+                                        <div class="kt-widget14__legend">
+                                            <span class="kt-widget14__bullet kt-bg-warning"></span>
+                                            <span class="kt-widget14__stats">-7% London</span>
+                                        </div>
+                                        <div class="kt-widget14__legend">
+                                            <span class="kt-widget14__bullet kt-bg-brand"></span>
+                                            <span class="kt-widget14__stats">+20% California</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center my-2">
+                                    <a href="#" class="btn btn-label-info btn-pill">Show Data</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--end:: Widgets/Revenue Change-->
+                    </div>
+                    <div class="col-md-6">
+                        <!--begin:: Widgets/Daily Sales-->
+                        <div class="kt-portlet kt-portlet--height-fluid">
+                            <div class="kt-widget14">
+                                <div class="kt-widget14__header kt-margin-b-30">
+                                    <h3 class="kt-widget14__title">
+                                        Network issues
+                                    </h3>
+                                    <span class="kt-widget14__desc">
+                                        Sites with network issues per band
+                                    </span>
+                                </div>
+                                <div class="kt-widget14__chart" style="height:120px;">
+                                    <canvas id="kt_chart_daily_sales"></canvas>
+                                </div>
+                                <div class="text-center my-2">
+                                    <a href="#" class="btn btn-label-info btn-pill">Show Data</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--end:: Widgets/Daily Sales-->
+                    </div>
+                    <div class="col-md-12">
+                        <!--begin:: Widgets/Inbound Bandwidth-->
+                        <div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder">
+                            <div class="kt-portlet__head kt-portlet__space-x">
+                                <div class="kt-portlet__head-label">
+                                    <h3 class="kt-portlet__head-title">
+                                        Inbound Bandwidth
+                                    </h3>
+                                </div>
+                                <div class="kt-portlet__head-toolbar">
+                                    <a href="#" class="btn btn-label-success btn-sm btn-bold dropdown-toggle" data-toggle="dropdown">
+                                        Export
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+                                            <li class="kt-nav__item">
+                                                <a href="#" class="kt-nav__link">
+                                                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                                                    <span class="kt-nav__link-text">Reports</span>
+                                                </a>
+                                            </li>
+                                            <li class="kt-nav__item">
+                                                <a href="#" class="kt-nav__link">
+                                                    <i class="kt-nav__link-icon flaticon2-send"></i>
+                                                    <span class="kt-nav__link-text">Messages</span>
+                                                </a>
+                                            </li>
+                                            <li class="kt-nav__item">
+                                                <a href="#" class="kt-nav__link">
+                                                    <i class="kt-nav__link-icon flaticon2-pie-chart-1"></i>
+                                                    <span class="kt-nav__link-text">Charts</span>
+                                                </a>
+                                            </li>
+                                            <li class="kt-nav__item">
+                                                <a href="#" class="kt-nav__link">
+                                                    <i class="kt-nav__link-icon flaticon2-avatar"></i>
+                                                    <span class="kt-nav__link-text">Members</span>
+                                                </a>
+                                            </li>
+                                            <li class="kt-nav__item">
+                                                <a href="#" class="kt-nav__link">
+                                                    <i class="kt-nav__link-icon flaticon2-settings"></i>
+                                                    <span class="kt-nav__link-text">Settings</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="kt-portlet__body kt-portlet__body--fluid">
+                                <div class="kt-widget20">
+                                    <div class="kt-widget20__content kt-portlet__space-x">
+                                        <span class="kt-widget20__number kt-font-brand">670+</span>
+                                        <span class="kt-widget20__desc">Successful transactions</span>
+                                    </div>
+                                    <div class="kt-widget20__chart" style="height:130px;">
+                                        <canvas id="kt_chart_bandwidth1"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end:: Widgets/Inbound Bandwidth-->
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Graph End -->
+
+<!-- Legend Modal Start -->
+<div class="modal fade" data-backdrop="false" id="ScaleModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Scale</h5>
+                <button class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="kt-portlet__body">
+                    <ul class="nav nav-pills nav-fill" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#kt_tabs_5_1"><img class="kt-hidden0"
+                                    alt="Pic" src="{% static 'assets/media/icons/Measure_Area16.png' %}"> Area</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#kt_tabs_5_2"><img class="kt-hidden0" alt="Pic"
+                                    src="{% static 'assets/media/icons/Measure_Distance16.png' %}"> Distance</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#kt_tabs_5_3"><img class="kt-hidden0" alt="Pic"
+                                    src="{% static 'assets/media/icons/Measure_Point16.png' %}"> Location</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="kt_tabs_5_1" role="tabpanel">
+                            <select name="" id="" class="form-control">
+                                <option value="">Sq Kilometers</option>
+                                <option value=""></option>
+                                <option value=""></option>
+                            </select>
+                            <div class="pt-2 text-center">
+                                <strong>Measurement Result</strong>
+                                <hr class="mt-0">
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="kt_tabs_5_2" role="tabpanel">
+                            <select name="" id="" class="form-control">
+                                <option value="">Kilometers</option>
+                                <option value=""></option>
+                                <option value=""></option>
+                            </select>
+                            <div class="pt-2 text-center">
+                                <strong>Measurement Result</strong>
+                                <hr class="mt-0">
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="kt_tabs_5_3" role="tabpanel">
+                            <select name="" id="" class="form-control">
+                                <option value="">Degrees</option>
+                                <option value=""></option>
+                                <option value=""></option>
+                            </select>
+                            <div class="pt-2 text-center">
+                                <strong>Measurement Result</strong>
+                                <hr class="mt-0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Legend Modal End -->
+
+
+<!-- Data Grid Start -->
+<div id="dada-grid">
+    <div class="data-grid-openar" onclick="showDataGrid()">
+        <i class="la la-th-list"></i> Open Data Grid <i class="la la-chevron-circle-up"></i>
+    </div>
+    <span class="export">
+        Download Data <i class="flaticon-download"></i>
+    </span>
+    <div class="dg-container">
+        <div class="kt-portlet__body kt-portlet__body--fit">
+            <!--begin: Datatable -->
+            <div class="kt-datatable kt-datatable--default kt-datatable--brand kt-datatable--loaded"
+                id="base_translation" style="">
+                <table class="kt-datatable__table" style="display: block; min-height: 500px;">
+                    <thead class="kt-datatable__head">
+                        <tr class="kt-datatable__row" style="left: 0px;">
+                            <th data-field="SrNo" class="kt-datatable__cell kt-datatable__cell--sort"
+                                style="width: 14vw;text-align:center">
+                                # </th>
+                            <th data-field="Project" class="kt-datatable__cell kt-datatable__cell--sort"
+                                style="width: 14vw;text-align:center">
+                                Project Id </th>
+                            <th data-field="Date" class="kt-datatable__cell   kt-datatable__cell--sort"
+                                style="width: 14vw;text-align:center">
+                                Date and Time </th>
+                            <th data-field="Bin" class="kt-datatable__cell   kt-datatable__cell--sort"
+                                style="width: 14vw;text-align:center">
+                                Bin No. </th>
+                            <th data-field="Latitude" class="kt-datatable__cell   kt-datatable__cell--sort"
+                                style="width: 14vw;text-align:center">
+                                Latitude </th>
+                            <th data-field="Longitude" class="kt-datatable__cell   kt-datatable__cell--sort"
+                                style="width: 14vw;text-align:center">
+                                Longitude </th>
+                            <th data-field="Actions" data-autohide-disabled="false"
+                                class="kt-datatable__cell   kt-datatable__cell--sort"><span
+                                    style="width: 110px;">Actions</span></th>
+
+                        </tr>
+                    </thead>
+                    <tbody class="kt-datatable__body" style="">
+                        <tr data-row="0" class="kt-datatable__row" style="left: 0px;">
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="RecordID">
+                                1 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Project">
+                                1 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Date">
+                                17-02-2018 10:24 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Bin">
+                                -112_222 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Latitude">
+                                52.1998 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Longitude">
+                                20.8432 </td>
+                            <td data-field="Actions" data-autohide-disabled="false" class="kt-datatable__cell"><span
+                                    style="overflow: visible; position: relative; width: 110px;">
+                                    <div class="dropdown"> <a data-toggle="dropdown"
+                                            class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i
+                                                class="la la-ellipsis-h"></i> </a>
+                                        <div class="dropdown-menu dropdown-menu-right"> <a href="#"
+                                                class="dropdown-item"><i class="la la-edit"></i> Edit Details</a> <a
+                                                href="#" class="dropdown-item"><i class="la la-leaf"></i> Update
+                                                Status</a> <a href="#" class="dropdown-item"><i class="la la-print"></i>
+                                                Generate Report</a> </div>
+                                    </div> <a title="Edit details" class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i
+                                            class="la la-edit"></i> </a> <a title="Delete"
+                                        class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i class="la la-trash"></i>
+                                    </a>
+                                </span></td>
+                        </tr>
+                        <tr data-row="0" class="kt-datatable__row" style="left: 0px;">
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="RecordID">
+                                1 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Project">
+                                1 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Date">
+                                17-02-2018 10:24 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Bin">
+                                -112_223 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Latitude">
+                                52.2007 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Longitude">
+                                20.8432 </td>
+                            <td data-field="Actions" data-autohide-disabled="false" class="kt-datatable__cell"><span
+                                    style="overflow: visible; position: relative; width: 110px;">
+                                    <div class="dropdown"> <a data-toggle="dropdown"
+                                            class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i
+                                                class="la la-ellipsis-h"></i> </a>
+                                        <div class="dropdown-menu dropdown-menu-right"> <a href="#"
+                                                class="dropdown-item"><i class="la la-edit"></i> Edit Details</a> <a
+                                                href="#" class="dropdown-item"><i class="la la-leaf"></i> Update
+                                                Status</a> <a href="#" class="dropdown-item"><i class="la la-print"></i>
+                                                Generate Report</a> </div>
+                                    </div> <a title="Edit details" class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i
+                                            class="la la-edit"></i> </a> <a title="Delete"
+                                        class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i class="la la-trash"></i>
+                                    </a>
+                                </span></td>
+                        </tr>
+                        <tr data-row="0" class="kt-datatable__row" style="left: 0px;">
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="RecordID">
+                                1 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Project">
+                                1 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Date">
+                                17-02-2018 10:24 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Bin">
+                                -112_224 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Latitude">
+                                52.2016 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Longitude">
+                                20.8432 </td>
+                            <td data-field="Actions" data-autohide-disabled="false" class="kt-datatable__cell"><span
+                                    style="overflow: visible; position: relative; width: 110px;">
+                                    <div class="dropdown"> <a data-toggle="dropdown"
+                                            class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i
+                                                class="la la-ellipsis-h"></i> </a>
+                                        <div class="dropdown-menu dropdown-menu-right"> <a href="#"
+                                                class="dropdown-item"><i class="la la-edit"></i> Edit Details</a> <a
+                                                href="#" class="dropdown-item"><i class="la la-leaf"></i> Update
+                                                Status</a> <a href="#" class="dropdown-item"><i class="la la-print"></i>
+                                                Generate Report</a> </div>
+                                    </div> <a title="Edit details" class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i
+                                            class="la la-edit"></i> </a> <a title="Delete"
+                                        class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i class="la la-trash"></i>
+                                    </a>
+                                </span></td>
+                        </tr>
+                        <tr data-row="0" class="kt-datatable__row" style="left: 0px;">
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="RecordID">
+                                1 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Project">
+                                1 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Date">
+                                17-02-2018 10:24 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Bin">
+                                -112_225 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Latitude">
+                                52.2025 </td>
+                            <td class="kt-datatable__cell--sorted kt-datatable__cell--center kt-datatable__cell"
+                                style="text-align: center; word-break: break-all;width:14vw" data-field="Longitude">
+                                20.8432 </td>
+                            <td data-field="Actions" data-autohide-disabled="false" class="kt-datatable__cell"><span
+                                    style="overflow: visible; position: relative; width: 110px;">
+                                    <div class="dropdown"> <a data-toggle="dropdown"
+                                            class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i
+                                                class="la la-ellipsis-h"></i> </a>
+                                        <div class="dropdown-menu dropdown-menu-right"> <a href="#"
+                                                class="dropdown-item"><i class="la la-edit"></i> Edit Details</a> <a
+                                                href="#" class="dropdown-item"><i class="la la-leaf"></i> Update
+                                                Status</a> <a href="#" class="dropdown-item"><i class="la la-print"></i>
+                                                Generate Report</a> </div>
+                                    </div> <a title="Edit details" class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i
+                                            class="la la-edit"></i> </a> <a title="Delete"
+                                        class="btn btn-sm btn-clean btn-icon btn-icon-md"> <i class="la la-trash"></i>
+                                    </a>
+                                </span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <!--end: Datatable -->
+        </div>
+    </div>
+</div>
+<!-- Data Grid End -->
+
+
+
+<script src="{% static 'custom/map.js'%}" type="text/javascript"></script>
+
+
+{% endblock %}

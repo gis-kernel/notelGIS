@@ -1,0 +1,52 @@
+.ol-custom-overviewmap,
+.ol-custom-overviewmap.ol-uncollapsible {
+  bottom: 0;
+  left: auto;
+  right: 0;
+  top: auto;
+}
+
+.ol-custom-overviewmap:not(.ol-collapsed)  {
+  border: 1px solid black;
+}
+
+.ol-custom-overviewmap .ol-overviewmap-map {
+  border: none;
+  width: 300px;
+}
+
+.ol-custom-overviewmap .ol-overviewmap-box {
+  border: 2px solid red;
+}
+
+.ol-overviewmap button{
+  position: fixed;
+  bottom: auto;
+  left: auto;
+  right: 10px;
+  top: 303px;
+  width: 34px;
+  height: 34px;
+  background: transparent url(../assets/media/bg/icon-bgGreen.svg) no-repeat center;
+  background-size: contain;
+  list-style: none;
+  text-align: center;
+  color: #fff;
+  font-size: 20px;
+  line-height: 34px;
+}
+.ol-overviewmap button:hover, .ol-overviewmap button:focus{
+  background-color: transparent;
+}
+.ol-custom-overviewmap:not(.ol-collapsed) button{
+  bottom: auto;
+  left: auto;
+  right: 10px;
+  top: 303px;
+  position: fixed;
+}
+
+.ol-rotate {
+  right: 10px;
+  top: 370px;
+}

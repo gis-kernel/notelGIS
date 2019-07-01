@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% extends "nongis/index.html" %}
+{% load static %}
+
+{% block body_block %}
+<div class="login">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 align-self-center">
+                <img src="{% static 'assets/media/logos/logo.svg' %}" alt="" width="300px"><br>
+                <h5 class="pt-3">Register In N-Hub Optimizer</h5>
+            </div>
+
+            <div class="col-md-6">
+  {% if registered %}
+                <label >Thank you for registering, Please wait while Admin activate your account</label>
+                {% else %}
+                
+                <div class="tab-content">
+                    
+                    <div class="tab-pane fade show active" id="Register">
+                        <form enctype="multipart/form-data" method="POST">
+                            {% csrf_token %}
+                            {% load widget_tweaks %}
+                            {% for field in user_form %}
+                            <div class="form-group">
+                                {{field.label}}
+                                {{field|add_class:"form-control"}}
+                                {% for errors in field.errors %}
+                               <small style='color:red'> {{errors}}</small>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                            {% for field in profile_form %}
+                            <div class="form-group">
+                                {{field.label}}
+                                {{field|add_class:"form-control"}}
+                                {% for errors in field.errors %}
+                               <small style='color:red'> {{errors}}</small>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+
+                            <div class="pt-4">
+                                <!-- <input type="submit" name="register" value="Register" class="btn btn-primary btn-block"> -->
+                                <button type='submit' name='submit' value='register'
+                                    class="btn btn-primary btn-block">Register</button>
+                            </div>
+                        </form>
+                        {% endif %}
+                    <div class="text-center pt-5">
+                            <a href="{% url 'app:landing' %}" class="kt-link kt-link--state kt-link--warning">Log in here</a>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
